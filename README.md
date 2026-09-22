@@ -1,13 +1,19 @@
 # citas-web
 
-Repositorio frontend. **Comienza vacío de aplicación** porque cada estudiante debe:
+Frontend del sistema de citas, importado desde el diseño generado en Google AI Studio.
 
-1. diseñar su interfaz con la Skill `stitch-design-to-frontend`;
-2. aprobar el diseño;
-3. exportar/continuar en Google AI Studio;
-4. elegir React o Angular;
-5. importar el código generado en este repo;
-6. reconciliar el resultado con el diseño aprobado;
-7. integrar REST directamente contra `citas-api`.
+## Stack
 
-No usar Express/BFF.
+- React 19 + TypeScript
+- Vite
+- Tailwind CSS
+
+## Ejecutar localmente
+
+1. Instala las dependencias con `npm install`.
+2. Copia `.env.example` a `.env` y ajusta `VITE_API_URL` si el backend no se ejecuta en `http://localhost:8080`.
+3. Ejecuta `npm run dev`.
+
+## Estado de integración
+
+Las pantallas, la navegación y los estilos del exportado están incorporados. El exportado usa datos sintéticos en memoria (`src/data/mockData.ts`); la conexión REST directa con `citas-api` queda pendiente de implementar contra el contrato aprobado. No se incluye Express ni un BFF.
