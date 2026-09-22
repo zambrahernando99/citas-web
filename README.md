@@ -16,4 +16,4 @@ Frontend del sistema de citas, importado desde el diseño generado en Google AI 
 
 ## Estado de integración
 
-Las pantallas, la navegación y los estilos del exportado están incorporados. El exportado usa datos sintéticos en memoria (`src/data/mockData.ts`); la conexión REST directa con `citas-api` queda pendiente de implementar contra el contrato aprobado. No se incluye Express ni un BFF.
+Las pantallas, la navegación y los estilos del exportado están incorporados. El exportado conserva datos sintéticos en memoria (`src/data/mockData.ts`) para las capacidades posteriores a S2. Registro, login y logout consumen directamente el contrato REST v1 de `citas-api` mediante `VITE_API_URL`; no se incluye Express ni un BFF. Los tokens de S2 sólo se mantienen en memoria.
