@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Header } from './components/Header';
 import { LoginScreen } from './components/LoginScreen';
+import { RegistrationScreen } from './components/RegistrationScreen';
 import { Sidebar } from './components/Sidebar';
 import { AgendarCitaScreen } from './components/screens/AgendarCitaScreen';
 import { BrandManualScreen } from './components/screens/BrandManualScreen';
@@ -19,9 +20,12 @@ import {
   INITIAL_USER_PROFILE,
 } from './data/mockData';
 import { Appointment, AvailabilityBlock, RequestItem, Role, Screen } from './types';
+import { AuthTokens, logout } from './services/authApi';
 
 export default function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [authView, setAuthView] = useState<'login' | 'register'>('login');
+  const [tokens, setTokens] = useState<AuthTokens | null>(null);
   const [activeRole, setActiveRole] = useState<Role>('USER');
   const [currentScreen, setCurrentScreen] = useState<Screen>('inicio');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -62,20 +66,18 @@ export default function App() {
     }
   };
 
-  const handleLoginSuccess = (selectedRole: Role = 'USER') => {
+  const handleLoginSuccess = (issuedTokens: AuthTokens) => {
+    setTokens(issuedTokens);
     setIsLoggedIn(true);
-    setActiveRole(selectedRole);
-    if (selectedRole === 'PROFESSIONAL') {
-      setCurrentScreen('mi-agenda');
-    } else if (selectedRole === 'ADMIN') {
-      setCurrentScreen('solicitudes');
-    } else {
-      setCurrentScreen('inicio');
-    }
+    setActiveRole('USER');
+    setCurrentScreen('inicio');
   };
 
   const handleLogout = () => {
+    if (tokens) void logout(tokens.refreshToken).catch(() => undefined);
+    setTokens(null);
     setIsLoggedIn(false);
+    setAuthView('login');
   };
 
   // Appointment Actions
@@ -124,7 +126,9 @@ export default function App() {
 
   // Render Login Screen if not authenticated
   if (!isLoggedIn) {
-    return <LoginScreen onLoginSuccess={handleLoginSuccess} />;
+    return authView === 'login'
+      ? <LoginScreen onLoginSuccess={handleLoginSuccess} onRegisterRequested={() => setAuthView('register')} />
+      : <RegistrationScreen onRegistrationSuccess={handleLoginSuccess} onLoginRequested={() => setAuthView('login')} />;
   }
 
   // Render Main Layout with Sidebar and Header

@@ -2,11 +2,13 @@
 
 ## Estado verificado del repositorio
 
-Al crear este archivo, `citas-web` no contiene `package.json`, código fuente, rutas, estilos/tokens, pruebas ni documentación del diseño aprobado. El framework todavía no está determinado. No asumir React ni Angular, ni crear estructura o comandos específicos, hasta importar el proyecto exportado desde Google AI Studio y verificar su contenido.
+`citas-web` contiene el prototipo importado desde Google AI Studio: React 19, TypeScript, Vite y Tailwind CSS. La interfaz y sus estilos viven en `src/`; `src/data/mockData.ts` conserva datos sintéticos para las pantallas fuera del alcance actual. La configuración de la API se recibe por `VITE_API_URL` y el frontend consume Spring Boot de forma directa, sin Express ni BFF.
+
+El incremento S2 abarca HU-001 y HU-002: registro `USER`, login y cierre de sesión contra el contrato REST v1 de `citas-api`. El resto del prototipo no constituye evidencia de funcionalidades posteriores hasta que sus HU, contratos y pruebas correspondientes se implementen.
 
 ## Inspección obligatoria
 
-Antes de proponer cambios, detectar el stack real del repositorio. Leer `package.json`, estructura, rutas, estilos/tokens y documentación del diseño aprobado. Puede ser React o Angular; no cambiar de framework por preferencia propia.
+Antes de proponer cambios, leer `package.json`, estructura, rutas, estilos/tokens y la evidencia de diseño aprobada disponible. No cambiar React, Vite o Tailwind por preferencia propia ni rediseñar el prototipo importado.
 
 ## Responsabilidad
 
