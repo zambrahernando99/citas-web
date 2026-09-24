@@ -211,6 +211,7 @@ export default function App() {
               screen={currentScreen}
               userProfile={currentProfile}
               onNavigate={setCurrentScreen}
+              tokens={tokens!}
             />
           )}
         </main>
