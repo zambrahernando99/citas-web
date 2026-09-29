@@ -2,9 +2,15 @@
 
 ## Estado verificado del repositorio
 
-`citas-web` contiene el prototipo importado desde Google AI Studio: React 19, TypeScript, Vite y Tailwind CSS. La interfaz y sus estilos viven en `src/`; `src/data/mockData.ts` conserva datos sintéticos para las pantallas fuera del alcance actual. La configuración de la API se recibe por `VITE_API_URL` y el frontend consume Spring Boot de forma directa, sin Express ni BFF.
+`citas-web` parte del prototipo importado desde Google AI Studio: React 19, TypeScript, Vite y Tailwind CSS. La interfaz y sus estilos viven en `src/`; no existen datos mock en código de producción. La configuración de la API se recibe por `VITE_API_URL` y el frontend consume Spring Boot de forma directa (cliente único `src/services/http.ts`), sin Express ni BFF.
 
-El incremento S2 abarca HU-001 y HU-002: registro `USER`, login y cierre de sesión contra el contrato REST v1 de `citas-api`. El resto del prototipo no constituye evidencia de funcionalidades posteriores hasta que sus HU, contratos y pruebas correspondientes se implementen.
+Alcance actual: HU-001..HU-028 consumidas desde el contrato REST v1 de `citas-api` (sesión con refresh proactivo, perfil y afiliación, catálogos —regímenes como catálogo fijo de solo lectura—, profesionales, disponibilidad, reservas, bandeja administrativa `/api/v1/admin/inbox`, cierre de atención e historial de estados). Las pantallas permitidas por rol se definen en `src/navigation.ts` (`screensByRole`, fuente única para menú y navegación).
+
+Verificación (desde la raíz del workspace, contenedor `citas-web-dev`): `npm run lint`, `npm test` y `npm run build`. El hook `.githooks/pre-commit` ejecuta `scripts/verify-s3.ps1` en el host (escaneo de secretos sobre lo staged, lint, test y build).
+
+Docker: el contenedor usa su propio volumen `web_node_modules` (binarios Linux), separado del `node_modules` del host Windows; tras cambiar dependencias, ejecutar `npm install` en ambos. Vite dentro del contenedor no recibe eventos de cambio del bind mount de Windows: después de editar, reiniciar `npm run dev` para ver el código actual.
+
+Pruebas: Vitest + Testing Library (`vitest.config.ts`, `src/test/setup.ts`). Los mocks de `fetch` (vía `vi.stubGlobal`) y los datos sintéticos viven solo en archivos `*.test.*`.
 
 ## Inspección obligatoria
 
