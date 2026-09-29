@@ -16,4 +16,6 @@ Frontend del sistema de citas, importado desde el diseño generado en Google AI 
 
 ## Estado de integración
 
-Las pantallas, la navegación y los estilos del exportado están incorporados. El exportado conserva datos sintéticos en memoria (`src/data/mockData.ts`) para las capacidades posteriores a S2. Registro, login y logout consumen directamente el contrato REST v1 de `citas-api` mediante `VITE_API_URL`; no se incluye Express ni un BFF. Los tokens de S2 sólo se mantienen en memoria.
+La aplicación consume directamente la API REST v1 de `citas-api` mediante `VITE_API_URL`; no hay Express ni BFF y no se incluyen fixtures ni datos de negocio simulados. Las pantallas cargan su información del servicio: perfil, afiliación, catálogos, disponibilidad, reservas, citas, solicitudes, agenda y directorios. Si la API no está disponible, se muestra el error del servicio en vez de sustituir la información por datos locales. Los tokens se mantienen en memoria.
+
+Los flujos implementados dependen de migraciones Flyway vigentes en el backend. El workflow S5 y la integración MCP requieren una instancia n8n configurada por el entorno, además de sus credenciales externas; no se simulan en la interfaz.

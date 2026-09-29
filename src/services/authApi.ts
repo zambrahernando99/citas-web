@@ -4,6 +4,7 @@ export interface AuthTokens {
   accessTokenExpiresInSeconds: number;
   refreshTokenExpiresInSeconds: number;
 }
+export interface CurrentUser { id: string; givenNames: string; familyNames: string; email: string; phone: string; roles: Array<'USER' | 'PROFESSIONAL' | 'ADMIN'>; }
 
 export interface RegistrationRequest {
   givenNames: string;
@@ -31,4 +32,16 @@ const request = async <T>(path: string, body: unknown): Promise<T> => {
 
 export const register = (body: RegistrationRequest) => request<{ id: string }>('/api/v1/auth/register', body);
 export const login = (body: Pick<RegistrationRequest, 'email' | 'password'>) => request<AuthTokens>('/api/v1/auth/login', body);
+export const currentUser = async (tokens: AuthTokens): Promise<CurrentUser> => {
+  const response = await fetch(`${baseUrl}/api/v1/auth/me`, { headers: { Accept: 'application/json', Authorization: `Bearer ${tokens.accessToken}` } });
+  if (!response.ok) throw new Error('No fue posible cargar el perfil de la sesión.');
+  return response.json() as Promise<CurrentUser>;
+};
+export const updateCurrentUser = async (tokens: AuthTokens, profile: Pick<CurrentUser, 'givenNames'|'familyNames'|'email'|'phone'>): Promise<CurrentUser> => {
+  const response = await fetch(`${baseUrl}/api/v1/auth/me`, { method: 'PUT', headers: { Accept: 'application/json, application/problem+json', Authorization: `Bearer ${tokens.accessToken}`, 'Content-Type':'application/json' }, body: JSON.stringify(profile) });
+  if (!response.ok) { const problem = await response.json().catch(() => null) as {detail?:string}|null; throw new Error(problem?.detail ?? 'No fue posible guardar el perfil.'); }
+  return response.json() as Promise<CurrentUser>;
+};
 export const logout = (refreshToken: string) => request<void>('/api/v1/auth/logout', { refreshToken });
+export const requestPasswordReset = (email: string) => request<{ debugToken: string | null }>('/api/v1/auth/password-reset-requests', { email });
+export const resetPassword = (token: string, newPassword: string) => request<void>('/api/v1/auth/password-resets', { token, newPassword });

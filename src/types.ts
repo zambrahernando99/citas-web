@@ -15,18 +15,7 @@ export type Screen =
   | 'mi-perfil'
   | 'manual-marca';
 
-export interface UserProfile {
-  id: string;
-  name: string;
-  email: string;
-  role: Role;
-  title: string;
-  documentId: string;
-  eps: string;
-  plan: string;
-  status: string;
-  phone: string;
-}
+export interface UserProfile { name: string; }
 
 export type AppointmentStatus = 
   | 'Aprobada'

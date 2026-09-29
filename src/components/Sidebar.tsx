@@ -1,156 +1,20 @@
-import React from 'react';
-import { Screen, UserProfile } from '../types';
+import { Role, Screen, UserProfile } from '../types';
 
-interface SidebarProps {
-  currentScreen: Screen;
-  onNavigate: (screen: Screen) => void;
-  userProfile: UserProfile;
-  isOpenMobile: boolean;
-  onCloseMobile: () => void;
-}
-
-export const Sidebar: React.FC<SidebarProps> = ({
-  currentScreen,
-  onNavigate,
-  userProfile,
-  isOpenMobile,
-  onCloseMobile,
-}) => {
-  const navItems: { screen: Screen; label: string; icon: string }[] = [
-    { screen: 'inicio', label: 'Inicio', icon: 'home' },
-    { screen: 'agendar-cita', label: 'Agendar Cita', icon: 'event_available' },
-    { screen: 'mis-citas', label: 'Mis Citas', icon: 'calendar_month' },
-    { screen: 'mi-disponibilidad', label: 'Mi Disponibilidad', icon: 'schedule' },
-    { screen: 'mi-agenda', label: 'Mi Agenda', icon: 'view_agenda' },
-    { screen: 'solicitudes', label: 'Solicitudes', icon: 'assignment' },
-    { screen: 'reprogramaciones', label: 'Reprogramaciones', icon: 'update' },
-    { screen: 'profesionales', label: 'Profesionales', icon: 'badge' },
-    { screen: 'especialidades', label: 'Especialidades', icon: 'medical_services' },
-    { screen: 'eps-y-planes', label: 'EPS y Planes', icon: 'verified' },
-    { screen: 'mi-perfil', label: 'Mi Perfil', icon: 'person' },
-  ];
-
-  const content = (
-    <div className="flex flex-col h-full bg-[#f4f3fa] pt-6 pb-8 shadow-[0_1px_8px_rgba(0,0,0,0.04)] select-none">
-      {/* Brand Header */}
-      <div className="px-7 mb-7 flex items-center justify-between">
-        <div 
-          className="flex items-center gap-3 cursor-pointer"
-          onClick={() => {
-            onNavigate('inicio');
-            onCloseMobile();
-          }}
-        >
-          <div className="w-10 h-10 rounded-xl bg-[#002777] flex items-center justify-center text-white font-bold shadow-md shadow-[#002777]/20">
-            <span className="material-symbols-outlined text-[24px]">local_hospital</span>
-          </div>
-          <div>
-            <span className="block font-headline font-bold text-[#001549] text-lg leading-tight">Portal Citas</span>
-            <span className="text-xs text-[#444651] font-medium tracking-wide">Healthcare System</span>
-          </div>
-        </div>
-
-        {/* Mobile close button */}
-        {isOpenMobile && (
-          <button
-            onClick={onCloseMobile}
-            className="lg:hidden p-1.5 rounded-lg text-[#444651] hover:bg-[#e9e7ef]"
-          >
-            <span className="material-symbols-outlined text-[20px]">close</span>
-          </button>
-        )}
-      </div>
-
-      {/* Navigation List */}
-      <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = currentScreen === item.screen;
-          return (
-            <button
-              key={item.screen}
-              onClick={() => {
-                onNavigate(item.screen);
-                onCloseMobile();
-              }}
-              className={`w-full flex items-center px-4 py-3 rounded-xl transition-all font-medium text-sm text-left group ${
-                isActive
-                  ? 'bg-[#002777] text-white font-bold shadow-sm'
-                  : 'text-[#444651] hover:bg-[#e9e7ef] hover:text-[#001549]'
-              }`}
-            >
-              <span
-                className={`material-symbols-outlined mr-3 text-[22px] transition-transform ${
-                  isActive ? 'text-white' : 'text-[#757682] group-hover:text-[#001549]'
-                }`}
-              >
-                {item.icon}
-              </span>
-              <span>{item.label}</span>
-            </button>
-          );
-        })}
-
-        {/* Brand identity book link */}
-        <div className="pt-2">
-          <button
-            onClick={() => {
-              onNavigate('manual-marca');
-              onCloseMobile();
-            }}
-            className={`w-full flex items-center px-4 py-2.5 rounded-xl transition-all text-xs font-semibold ${
-              currentScreen === 'manual-marca'
-                ? 'bg-[#002777] text-white'
-                : 'text-[#0056c3] bg-[#E4F4FB]/80 hover:bg-[#E4F4FB]'
-            }`}
-          >
-            <span className="material-symbols-outlined mr-2.5 text-[18px]">palette</span>
-            <span>Manual de Marca (Pantone 280 C)</span>
-          </button>
-        </div>
-      </nav>
-
-      {/* Bottom Profile Anchor Card */}
-      <div className="px-6 pt-4 border-t border-[#c5c6d3]/30">
-        <div 
-          onClick={() => {
-            onNavigate('mi-perfil');
-            onCloseMobile();
-          }}
-          className="flex items-center gap-3 p-2 rounded-xl hover:bg-[#e9e7ef] cursor-pointer transition-colors"
-        >
-          <div className="w-9 h-9 rounded-full bg-[#001549] text-white flex items-center justify-center font-bold text-xs ring-2 ring-white shrink-0">
-            <span className="material-symbols-outlined text-[18px]">person</span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-bold truncate text-[#001549]">{userProfile.name}</p>
-            <p className="text-[11px] text-[#444651] truncate">Rol: {userProfile.role}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  return (
-    <>
-      {/* Desktop Fixed Sidebar */}
-      <aside className="fixed left-0 top-0 h-full w-72 z-50 hidden lg:block">
-        {content}
-      </aside>
-
-      {/* Mobile Drawer Backdrop */}
-      {isOpenMobile && (
-        <div 
-          className="fixed inset-0 bg-[#001549]/40 backdrop-blur-sm z-50 lg:hidden"
-          onClick={onCloseMobile}
-        >
-          <div 
-            className="w-72 h-full bg-[#f4f3fa] shadow-2xl animate-in slide-in-from-left duration-200"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {content}
-          </div>
-        </div>
-      )}
-    </>
-  );
+interface SidebarProps { currentScreen:Screen; onNavigate:(screen:Screen)=>void; userProfile:UserProfile; isOpenMobile:boolean; onCloseMobile:()=>void; roles:Role[]; }
+const allItems:Array<{screen:Screen;label:string;roles:Role[]}>=[
+  {screen:'inicio',label:'Inicio',roles:['USER','PROFESSIONAL','ADMIN']},
+  {screen:'agendar-cita',label:'Agendar cita',roles:['USER']},
+  {screen:'mis-citas',label:'Mis citas',roles:['USER']},
+  {screen:'mi-disponibilidad',label:'Mi disponibilidad',roles:['PROFESSIONAL']},
+  {screen:'mi-agenda',label:'Mi agenda',roles:['PROFESSIONAL']},
+  {screen:'solicitudes',label:'Solicitudes',roles:['ADMIN']},
+  {screen:'reprogramaciones',label:'Reprogramaciones',roles:['ADMIN']},
+  {screen:'profesionales',label:'Profesionales',roles:['ADMIN','USER']},
+  {screen:'especialidades',label:'Especialidades',roles:['ADMIN','USER']},
+  {screen:'eps-y-planes',label:'EPS y planes',roles:['ADMIN','USER']},
+  {screen:'mi-perfil',label:'Mi perfil',roles:['USER','PROFESSIONAL','ADMIN']},
+];
+export const Sidebar=({currentScreen,onNavigate,userProfile,isOpenMobile,onCloseMobile,roles}:SidebarProps)=>{
+  const content=<div className="flex h-full flex-col bg-[#f4f3fa] px-4 pb-6 pt-6"><div className="mb-7 flex items-center gap-3 px-3"><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#002777] text-white"><span className="material-symbols-outlined">local_hospital</span></span><div><p className="font-bold text-[#001549]">Portal Citas</p><p className="text-xs text-[#444651]">Agenda y atención</p></div></div><nav className="flex-1 space-y-1">{allItems.filter(item=>item.roles.some(role=>roles.includes(role))).map(item=><button key={item.screen} onClick={()=>{onNavigate(item.screen);onCloseMobile();}} className={`flex w-full items-center rounded-xl px-4 py-3 text-left text-sm font-medium ${currentScreen===item.screen?'bg-[#002777] font-bold text-white':'text-[#444651] hover:bg-[#e9e7ef]'}`}><span className="mr-3 material-symbols-outlined text-xl">{item.screen==='inicio'?'home':item.screen==='mi-perfil'?'person':item.screen.includes('cita')?'event':item.screen.includes('agenda')||item.screen.includes('disponibilidad')?'schedule':item.screen.includes('solicitud')||item.screen.includes('reprogram')?'assignment':item.screen==='profesionales'?'badge':item.screen==='especialidades'?'medical_services':'verified'}</span>{item.label}</button>)}</nav><div className="border-t border-[#c5c6d3]/40 pt-4"><p className="truncate px-3 text-xs font-bold text-[#001549]">{userProfile.name}</p><p className="px-3 text-[11px] text-[#444651]">{roles.join(' · ')}</p></div></div>;
+  return <><aside className="fixed left-0 top-0 z-50 hidden h-screen w-72 lg:block">{content}</aside>{isOpenMobile&&<div className="fixed inset-0 z-50 bg-[#001549]/40 lg:hidden" onClick={onCloseMobile}><aside className="h-full w-72 shadow-2xl" onClick={e=>e.stopPropagation()}>{content}</aside></div>}</>;
 };
